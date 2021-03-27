@@ -5,30 +5,41 @@
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title class="headline">
-          {{title}}
+          {{title}} - {{type}}
         </v-list-item-title>
-        <v-list-item-subtitle>Mon, 12:30 PM, Mostly sunny</v-list-item-subtitle>
+        <v-list-item-subtitle class="text--primary">{{def}}</v-list-item-subtitle>
+        <v-list-item-subtitle >{{time}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-card-text>
-      <v-list class="transparent">
+      <v-skeleton-loader v-if="internalLoading"
+          v-bind="attrs"
+          type="list-item-three-line"
+        ></v-skeleton-loader>
+        <p>Statistic Data</p>
+      <v-list class="transparent" v-if="!internalLoading">
             <v-list-item
               v-for="item in distance"
               :key="item.type"
             >
               <v-list-item-title>{{ item.type }}</v-list-item-title>
+
               <v-list-item-icon>
-                <v-icon>mdi-white-balance-sunny</v-icon>
+                <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-icon>
+
               <v-list-item-subtitle class="text-right">
                 {{ item.value }}
               </v-list-item-subtitle>
             </v-list-item>
           </v-list>
     </v-card-text>
-    <v-card-actions>
-      <v-btn color="deep-purple lighten-2" text align="center" v-on:click="deleteCard">
+  <v-card-actions>
+      <v-btn color="deep-purple lighten-2" text align="center" v-on:click="deleteCard(id)">
         Delete
+        <v-icon right dark>
+        mdi-delete-forever
+      </v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -36,9 +47,27 @@
 </template>
 
 <script>
+import axios from 'axios';
   export default {
     name: 'ActivityCard',
+
     props: {
+      id:{
+        type: Number,
+        default: -1
+      },
+      type:{
+        type: String,
+        default: ''
+      },
+      def:{
+        type:String,
+        default:''
+      },
+      time:{
+        type: String,
+        default:''
+      },
       title: {
         type: String,
         default: 'Activity Title'
@@ -46,23 +75,35 @@
       loading: {
         type: Boolean,
         default: true
-      },
-      distance: {
-        type: Array
       }
     },
     data: () => ({
+      internalLoading: true,
+      distance:[]
     }),
     methods: {
-     deleteCard: function () {
-       alert('Event to fire to parent to delete');
+     deleteCard: function (id) {
+       this.$emit('delete', id);
     }
+   },
+   mounted:function () {
+     let self = this;
+     axios.get(`http://localhost:8080/activitytracker/summaryData/${this.id}`)
+      .then(function (response) {
+        self.internalLoading = false;
+        self.distance.push({type:'Total Distance', icon:'mdi-run',value:response.data.total_distance});
+        self.distance.push({type:'Average Power', icon:'mdi-parking',value:response.data.average_power});
+        self.distance.push({type:'Average Cadence', icon:'mdi-bike',value:response.data.average_cadence});
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
    }
   };
 </script>
 
 <style scoped>
-.card{
-  margin: 16px;
-}
+  .card{
+    margin: 16px;
+  }
 </style>

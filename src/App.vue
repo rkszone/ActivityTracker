@@ -23,9 +23,7 @@
       <v-spacer></v-spacer>
    </v-app-bar>
   <v-main>
-
     <v-container class="height" fluid>
-
       <!-- If using vue-router -->
       <router-view></router-view>
     </v-container>
@@ -38,34 +36,30 @@
 </template>
 
 <script>
-
-export default {
-  name: 'App',
-
-  components: {
-  },
-
-  data: () => ({
-    drawer: false,
-    group: null,
-    selectedItem: 0,
-      items: [
-        { text: 'Home', icon: 'mdi-clock', link: '/' },
-        { text: 'File Upload', icon: 'mdi-account', link: '#/fileupload' },
-        { text: 'Activity Summary', icon: 'mdi-flag', link: '#/activity' },
-      ],
-  }),
-
-  watch: {
-      group () {
-        this.drawer = false;
-      },
+  export default {
+    name: 'App',
+    components: {
     },
-};
+    data: () => ({
+      drawer: false,
+      group: null,
+      selectedItem: 0,
+        items: [
+          { text: 'Home', icon: 'mdi-home', link: '#/' },
+          { text: 'File Upload', icon: 'mdi-upload', link: '#/fileupload' },
+          { text: 'Activity Summary', icon: 'mdi-bike', link: '#/activity' },
+        ],
+    }),
+    watch:{
+        '$route' (to){
+            this.selectedItem = this.items.findIndex(x => x.link ===`#${to.path}`);
+        }
+    },
+  };
 </script>
 
 <style >
-.height-100{
-  height: 100vh;
-}
+  .height-100{
+    height: 100vh;
+  }
 </style>
