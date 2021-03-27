@@ -126,7 +126,7 @@ import axios from 'axios';
                 'Accept': 'application/json'
                 }
             };
-            axios.post('http://localhost:8080/activitytracker/uploadFile',formData,config)
+            axios.post('https://activitytracker-api.azurewebsites.net/activitytracker/uploadFile',formData,config)
               .then(function (response) {
                 console.log(response);
                 self.snackbar = true;

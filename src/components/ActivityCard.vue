@@ -88,7 +88,7 @@ import axios from 'axios';
    },
    mounted:function () {
      let self = this;
-     axios.get(`http://localhost:8080/activitytracker/summaryData/${this.id}`)
+     axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/summaryData/${this.id}`)
       .then(function (response) {
         self.internalLoading = false;
         self.distance.push({type:'Total Distance', icon:'mdi-run',value:response.data.total_distance});

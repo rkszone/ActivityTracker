@@ -42,7 +42,7 @@ export default {
       this.activitiesData = [{},{},{},{}];
       this.loading = true;
       let self = this;
-      axios.get(`http://localhost:8080/activitytracker/activities?pageNo=${id}`)
+      axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/activities?pageNo=${id}`)
       .then(function (response) {
         self.pageLength = parseInt(response.data.maxPage);
         self.page = parseInt(response.data.currentPage);
@@ -57,7 +57,7 @@ export default {
   },
   mounted:function(){
     let self = this;
-    axios.get(`http://localhost:8080/activitytracker/activities`)
+    axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/activities`)
     .then(function (response) {
       self.pageLength = parseInt(response.data.maxPage);
       self.page = parseInt(response.data.currentPage);
