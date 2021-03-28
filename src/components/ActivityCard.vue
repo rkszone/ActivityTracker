@@ -1,6 +1,6 @@
 <template>
 <v-col align-self="stretch" cols="12" md="12" lg="6" xl="3">
-<v-skeleton-loader class="card" elevation="4" v-if="loading" v-bind="attrs" type="card-heading,article, actions"></v-skeleton-loader>
+<v-skeleton-loader class="card" elevation="4" v-if="loading" type="card-heading,article, actions"></v-skeleton-loader>
   <v-card class="card" v-if="!loading">
     <v-list-item two-line>
       <v-list-item-content>
@@ -8,12 +8,11 @@
           {{title}} - {{type}}
         </v-list-item-title>
         <v-list-item-subtitle class="text--primary">{{def}}</v-list-item-subtitle>
-        <v-list-item-subtitle >{{time}}</v-list-item-subtitle>
+        <v-list-item-subtitle >{{new Date(time).toUTCString().replace('GMT','')}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-card-text>
       <v-skeleton-loader v-if="internalLoading"
-          v-bind="attrs"
           type="list-item-three-line"
         ></v-skeleton-loader>
         <p>Statistic Data</p>
@@ -88,16 +87,19 @@ import axios from 'axios';
    },
    mounted:function () {
      let self = this;
+     if (this.id && this.id > 0) {
      axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/summaryData/${this.id}`)
       .then(function (response) {
         self.internalLoading = false;
-        self.distance.push({type:'Total Distance', icon:'mdi-run',value:response.data.total_distance});
+        self.distance.push({type:'Total Distance', icon:'mdi-map-marker-distance',value:response.data.total_distance});
+        self.distance.push({type:'Total Duration', icon:'mdi-timer',value:response.data.total_duration + ' mins'});
         self.distance.push({type:'Average Power', icon:'mdi-parking',value:response.data.average_power});
         self.distance.push({type:'Average Cadence', icon:'mdi-bike',value:response.data.average_cadence});
       })
       .catch(function (response) {
         console.log(response);
       });
+     }
    }
   };
 </script>

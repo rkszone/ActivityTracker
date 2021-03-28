@@ -37,6 +37,12 @@ export default {
       this.activitiesData = this.activitiesData.filter(function( obj ) {
         return obj.id !== id;
       });
+      axios.delete(`https://activitytracker-api.azurewebsites.net/activitytracker/activities/${id}`)
+      .then(function() {
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
     },
     paginationClick(id){
       this.activitiesData = [{},{},{},{}];
