@@ -12,10 +12,25 @@
       <v-pagination v-if="pagination" v-model="page" :length="pageLength" :total-visible="6"
         @input="paginationClick" ></v-pagination>
      </v-row>
+             <v-snackbar
+      v-model="snackbar"
+    >
+      {{ text }}
+      <template v-slot:action="{ }">
+        <v-btn
+          color="pink"
+          text
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 </section>
 </template>
 
 <script>
+import Constant from '../constant';
 import ActivityCard from './ActivityCard';
 import axios from 'axios';
 export default {
@@ -31,24 +46,28 @@ export default {
     pagination: false,
     page: 1,
     pageLength: 1,
+    snackbar: false,
+    text: `Activit deleted Successfully`,
   }),
   methods:{
     deletecard:function(id){
       this.activitiesData = this.activitiesData.filter(function( obj ) {
         return obj.id !== id;
       });
-      axios.delete(`https://activitytracker-api.azurewebsites.net/activitytracker/activities/${id}`)
+      axios.delete(`${Constant.BASE_URL}/activitytracker/activities/${id}`)
       .then(function() {
       })
       .catch(function (response) {
         console.log(response);
       });
+      this.snackbar = true;
+      this.text = `Activity deleted Successfully`;
     },
     paginationClick(id){
       this.activitiesData = [{},{},{},{}];
       this.loading = true;
       let self = this;
-      axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/activities?pageNo=${id}`)
+      axios.get(`${Constant.BASE_URL}/activitytracker/activities?pageNo=${id}`)
       .then(function (response) {
         self.pageLength = parseInt(response.data.maxPage);
         self.page = parseInt(response.data.currentPage);
@@ -63,7 +82,7 @@ export default {
   },
   mounted:function(){
     let self = this;
-    axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/activities`)
+    axios.get(`${Constant.BASE_URL}/activitytracker/activities`)
     .then(function (response) {
       self.pageLength = parseInt(response.data.maxPage);
       self.page = parseInt(response.data.currentPage);
@@ -73,6 +92,8 @@ export default {
     })
     .catch(function (response) {
       console.log(response);
+      self.loading = false;
+      self.activitiesData = [];
     });
   }
 };

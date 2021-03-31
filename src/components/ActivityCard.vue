@@ -34,7 +34,7 @@
           </v-list>
     </v-card-text>
   <v-card-actions>
-      <v-btn color="deep-purple lighten-2" text align="center" v-on:click="deleteCard(id)">
+      <v-btn color="red lighten-1" text align="center" v-on:click="deleteCard(id)">
         Delete
         <v-icon right dark>
         mdi-delete-forever
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import Constant from '../constant';
 import axios from 'axios';
   export default {
     name: 'ActivityCard',
@@ -88,7 +89,7 @@ import axios from 'axios';
    mounted:function () {
      let self = this;
      if (this.id && this.id > 0) {
-     axios.get(`https://activitytracker-api.azurewebsites.net/activitytracker/summaryData/${this.id}`)
+     axios.get(`${Constant.BASE_URL}/activitytracker/summaryData/${this.id}`)
       .then(function (response) {
         self.internalLoading = false;
         self.distance.push({type:'Total Distance', icon:'mdi-map-marker-distance',value:response.data.total_distance});

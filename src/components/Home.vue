@@ -7,7 +7,7 @@
           max-width="344"
         >
         <v-card-text>
-          <p class="display-1 text--primary">
+          <p class="display-1 text--primary text-center">
               Welcome !!
           </p>
         </v-card-text>
